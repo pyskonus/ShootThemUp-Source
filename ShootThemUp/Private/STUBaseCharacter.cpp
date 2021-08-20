@@ -8,7 +8,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "STU_CharacterMovementComponent.h"
 
-DEFINE_LOG_CATEGORY_STATIC(shit, All, All);
+DEFINE_LOG_CATEGORY_STATIC(Shit, All, All);
 
 // Sets default values
 ASTUBaseCharacter::ASTUBaseCharacter(const FObjectInitializer& ObjInit) : Super(ObjInit.SetDefaultSubobjectClass<USTU_CharacterMovementComponent>(ACharacter::CharacterMovementComponentName)) {
@@ -31,15 +31,20 @@ ASTUBaseCharacter::ASTUBaseCharacter(const FObjectInitializer& ObjInit) : Super(
 
 // Called when the game starts or when spawned
 void ASTUBaseCharacter::BeginPlay() {
-    Super::BeginPlay();
+  Super::BeginPlay();
+
+  check(HealthComponent);
+  check(HealthTextComponent);
+  check(GetCharacterMovement());
+
+  OnHealthChange(HealthComponent->GetHealth());
+  HealthComponent->OnDeath.AddUObject(this, &ASTUBaseCharacter::OnDeath);
+  HealthComponent->OnHealthChange.AddUObject(this, &ASTUBaseCharacter::OnHealthChange);
 }
 
 // Called every frame
 void ASTUBaseCharacter::Tick(float DeltaTime) {
   Super::Tick(DeltaTime);
-
-  const auto Health = HealthComponent->GetHealth();
-  HealthTextComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Health)));
 }
 
 // Called to bind functionality to input
@@ -87,3 +92,14 @@ void ASTUBaseCharacter::OnStopRunning() {
   WantsToRun = false;
 }
 
+void ASTUBaseCharacter::OnDeath() {
+  /*UE_LOG(Shit, Display, TEXT("Player %s is dead"), *GetName());*/
+  PlayAnimMontage(DeathAnimMontage);
+
+  GetCharacterMovement()->DisableMovement();
+  SetLifeSpan(5.0f);
+}
+
+void ASTUBaseCharacter::OnHealthChange(float Health) {
+  HealthTextComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Health)));
+}

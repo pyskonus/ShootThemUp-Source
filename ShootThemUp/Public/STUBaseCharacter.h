@@ -19,6 +19,10 @@ public:
   // Sets default values for this character's properties
   ASTUBaseCharacter(const FObjectInitializer& ObjInit);
 
+protected:
+  // Called when the game starts or when spawned
+  virtual void BeginPlay() override;
+
   UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
   USpringArmComponent* SpringArmComponent;
 
@@ -31,9 +35,9 @@ public:
   UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
   UTextRenderComponent* HealthTextComponent;
 
-protected:
-  // Called when the game starts or when spawned
-  virtual void BeginPlay() override;
+  UPROPERTY(EditDefaultsOnly, Category = "Animation")
+  UAnimMontage* DeathAnimMontage;
+
 
 public:
   // Called every frame
@@ -57,4 +61,7 @@ private:
 
   void OnStartRunning();
   void OnStopRunning();
+
+  void OnDeath();
+  void OnHealthChange(float Health);
 };

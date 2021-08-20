@@ -1,8 +1,6 @@
 // Created by pyskonus.
 
 #include "Components/STUHealthComponent.h"
-#include "Dev/STUFireDamageType.h"
-#include "Dev/STUIceDamageType.h"
 #include "GameFramework/Actor.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogHC, All, All)
@@ -17,6 +15,7 @@ void USTUHealthComponent::BeginPlay() {
   Super::BeginPlay();
 
   Health = MaxHealth;
+  OnHealthChange.Broadcast(Health);
 
   AActor* ComponentOwner = GetOwner();
 
@@ -26,13 +25,13 @@ void USTUHealthComponent::BeginPlay() {
 }
 
 void USTUHealthComponent::OnTakeAnyDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser) {
-  Health -= Damage;
+  if (Damage <= 0.0f || IsDead())
+    return;
 
-  if (DamageType) {
-    if (DamageType->IsA<USTUFireDamageType>()) {
-      UE_LOG(LogHC, Display, TEXT("So hot!"));
-    } else if (DamageType->IsA<USTUIceDamageType>()) {
-      UE_LOG(LogHC, Display, TEXT("So cold!"));
-    }
+  Health = FMath::Clamp(Health - Damage, 0.0f, MaxHealth);
+  OnHealthChange.Broadcast(Health);
+
+  if (IsDead()) {
+    OnDeath.Broadcast();
   }
 }
