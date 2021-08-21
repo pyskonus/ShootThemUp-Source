@@ -8,6 +8,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "STU_CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
+#include "Weapon/STUBaseWeapon.h"
 
 DEFINE_LOG_CATEGORY_STATIC(Shit, All, All);
 
@@ -43,6 +44,8 @@ void ASTUBaseCharacter::BeginPlay() {
   HealthComponent->OnHealthChange.AddUObject(this, &ASTUBaseCharacter::OnHealthChange);
 
   LandedDelegate.AddDynamic(this, &ASTUBaseCharacter::OnGroundLanded);
+
+  SpawnWeapon();
 }
 
 // Called every frame
@@ -121,4 +124,15 @@ void ASTUBaseCharacter::OnGroundLanded(const FHitResult& Hit) {
   const auto FinalDamage = FMath::GetMappedRangeValueClamped(LandedVelocity, LandedDamage, FallVelocityZ);
   UE_LOG(Shit, Display, TEXT("Landed damage: %f"), FinalDamage);
   TakeDamage(FinalDamage, FDamageEvent{}, nullptr, nullptr);
+}
+
+void ASTUBaseCharacter::SpawnWeapon() {
+  if (!GetWorld())
+    return;
+
+  const auto Weapon = GetWorld()->SpawnActor<ASTUBaseWeapon>(WeaponClass);
+  if (Weapon) {
+    FAttachmentTransformRules AttachmentRules(EAttachmentRule::SnapToTarget, false);
+    Weapon->AttachToComponent(GetMesh(), AttachmentRules, "WeaponSocket");
+  }
 }
