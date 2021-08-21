@@ -6,8 +6,8 @@
 #include "CoreMinimal.h"
 #include "STUHealthComponent.generated.h"
 
-DECLARE_MULTICAST_DELEGATE(FOnDeath)
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnHealthChange, float)
+DECLARE_MULTICAST_DELEGATE(FOnDeath);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnHealthChange, float);
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class SHOOTTHEMUP_API USTUHealthComponent : public UActorComponent {
@@ -33,13 +33,13 @@ protected:
   UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Heal")
   bool AutoHeal = true;
 
-  UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Heal")
+  UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Heal", meta = (ClampMin = "0.0", EditCondition = "AutoHeal"))
   float HealUpdateTime = 1.0f;
 
-  UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Heal")
+  UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Heal", meta = (ClampMin = "0.0", EditCondition = "AutoHeal"))
   float HealDelay = 3.0f;
 
-  UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Heal", meta = (ClampMin = "0.0"))
+  UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Heal", meta = (ClampMin = "0.0", EditCondition = "AutoHeal"))
   float HealModifier = 5.0f;
 
 private:

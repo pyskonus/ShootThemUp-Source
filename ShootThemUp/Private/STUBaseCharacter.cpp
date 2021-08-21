@@ -41,6 +41,8 @@ void ASTUBaseCharacter::BeginPlay() {
   OnHealthChange(HealthComponent->GetHealth());
   HealthComponent->OnDeath.AddUObject(this, &ASTUBaseCharacter::OnDeath);
   HealthComponent->OnHealthChange.AddUObject(this, &ASTUBaseCharacter::OnHealthChange);
+
+  LandedDelegate.AddDynamic(this, &ASTUBaseCharacter::OnGroundLanded);
 }
 
 // Called every frame
@@ -98,7 +100,7 @@ void ASTUBaseCharacter::OnDeath() {
   PlayAnimMontage(DeathAnimMontage);
 
   GetCharacterMovement()->DisableMovement();
-  SetLifeSpan(5.0f);
+  SetLifeSpan(LifeSpanOnDeath);
 
   if (Controller) {
     Controller->ChangeState(NAME_Spectating);
@@ -107,4 +109,16 @@ void ASTUBaseCharacter::OnDeath() {
 
 void ASTUBaseCharacter::OnHealthChange(float Health) {
   HealthTextComponent->SetText(FText::FromString(FString::Printf(TEXT("%.0f"), Health)));
+}
+
+void ASTUBaseCharacter::OnGroundLanded(const FHitResult& Hit) {
+  const auto FallVelocityZ = -GetCharacterMovement()->Velocity.Z;
+  UE_LOG(Shit, Display, TEXT("Landed velocity: %f"), FallVelocityZ);
+
+  if (FallVelocityZ < LandedVelocity.X)
+    return;
+
+  const auto FinalDamage = FMath::GetMappedRangeValueClamped(LandedVelocity, LandedDamage, FallVelocityZ);
+  UE_LOG(Shit, Display, TEXT("Landed damage: %f"), FinalDamage);
+  TakeDamage(FinalDamage, FDamageEvent{}, nullptr, nullptr);
 }
