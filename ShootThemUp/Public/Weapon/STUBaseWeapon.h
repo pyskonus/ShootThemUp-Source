@@ -30,10 +30,12 @@ protected:
   UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Misc")
   float AngleThreshold = 1.0f;
 
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Misc")
+  float DamageAmount = 10.0f;
+
   virtual void BeginPlay() override;
 
   void MakeShot();
-
-private:
   bool AngleSharp(const FVector& Muzzle, const FVector& ImpactPoint, const FVector& SocketFwd);
+  void MakeDamage(const FHitResult& HitResult);
 };

@@ -57,7 +57,7 @@ void ASTUBaseWeapon::MakeShot() {
     DrawDebugLine(GetWorld(), SocketTransform.GetLocation(), HitResult.ImpactPoint, FColor::Red, false, 3.0f, 0, 3.0f);
     DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10.0f, 24, FColor::Red, false, 5.0f);
 
-    UE_LOG(LogBaseWeapon, Display, TEXT("Bone: %s"), *HitResult.BoneName.ToString());
+    MakeDamage(HitResult);
   } else {
     DrawDebugLine(GetWorld(), SocketTransform.GetLocation(), TraceEnd, FColor::Red, false, 3.0f, 0, 3.0f);
   }
@@ -70,4 +70,20 @@ bool ASTUBaseWeapon::AngleSharp(const FVector& Muzzle, const FVector& ImpactPoin
   auto angle = UKismetMathLibrary::Acos(dp);
 
   return angle < AngleThreshold;
+}
+
+void ASTUBaseWeapon::MakeDamage(const FHitResult& HitResult) {
+  const auto DamagedActor = HitResult.GetActor();
+  if (!DamagedActor)
+    return;
+
+  const auto Player = Cast<ACharacter>(GetOwner());
+  if (!Player)
+    return;
+
+  const auto Controller = Player->GetController<APlayerController>();
+  if (!Controller)
+    return;
+
+  DamagedActor->TakeDamage(DamageAmount, FDamageEvent(), Controller, this);
 }
