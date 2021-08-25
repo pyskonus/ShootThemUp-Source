@@ -18,8 +18,22 @@ public:
   virtual void Fire();
 
 protected:
-  virtual void BeginPlay() override;
-
   UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
   USkeletalMeshComponent* WeaponMesh;
+
+  UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Misc")
+  FName MuzzleSocketName = "MuzzleSocket";
+
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Misc")
+  float TraceMaxDistance = 1500.0f;
+
+  UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Misc")
+  float AngleThreshold = 1.0f;
+
+  virtual void BeginPlay() override;
+
+  void MakeShot();
+
+private:
+  bool AngleSharp(const FVector& Muzzle, const FVector& ImpactPoint, const FVector& SocketFwd);
 };
