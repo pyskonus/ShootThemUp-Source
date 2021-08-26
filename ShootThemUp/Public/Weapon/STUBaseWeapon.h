@@ -34,18 +34,10 @@ protected:
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Misc")
   float DamageAmount = 10.0f;
 
-  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Misc")
-  float TimeBetweenShots = 0.15f;
-
-  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Misc")
-  float BulletSpread = 0.5f;
-
   virtual void BeginPlay() override;
 
-  void MakeShot();
+  virtual void MakeShot();
   bool AngleSharp(const FVector& Muzzle, const FVector& ImpactPoint, const FVector& SocketFwd);
+  /*bool GetTraceData(FVector& TraceStart, FVector TraceEnd);*/
   void MakeDamage(const FHitResult& HitResult);
-
-private:
-  FTimerHandle ShotTimerHandle;
 };

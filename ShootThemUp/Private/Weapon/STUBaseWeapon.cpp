@@ -24,50 +24,25 @@ void ASTUBaseWeapon::BeginPlay() {
 }
 
 void ASTUBaseWeapon::StartFire() {
-  MakeShot();
-  GetWorldTimerManager().SetTimer(ShotTimerHandle, this, &ASTUBaseWeapon::MakeShot, TimeBetweenShots, true);
 }
 
 void ASTUBaseWeapon::StopFire() {
-  GetWorldTimerManager().ClearTimer(ShotTimerHandle);
 }
 
 void ASTUBaseWeapon::MakeShot() {
-  if (!GetWorld())
-    return;
-
-  const auto Player = Cast<ACharacter>(GetOwner());
-  if (!Player)
-    return;
-
-  const auto Controller = Player->GetController<APlayerController>();
-  if (!Controller)
-    return;
-
-  FVector ViewLocation;
-  FRotator ViewRotation;
-  Controller->GetPlayerViewPoint(ViewLocation, ViewRotation);
-
-  const FTransform SocketTransform = WeaponMesh->GetSocketTransform(MuzzleSocketName);
-  const FVector TraceStart = ViewLocation;                                         //SocketTransform.GetLocation();
-  const auto HalfRad = FMath::DegreesToRadians(BulletSpread);
-  const FVector ShootDirection = FMath::VRandCone(ViewRotation.Vector(), HalfRad); //SocketTransform.GetRotation().GetForwardVector();
-  const FVector TraceEnd = TraceStart + ShootDirection * TraceMaxDistance;
-
-  FCollisionQueryParams CollisionParams;
-  CollisionParams.AddIgnoredActor(GetOwner());
-  FHitResult HitResult;
-  GetWorld()->LineTraceSingleByChannel(HitResult, TraceStart, TraceEnd, ECollisionChannel::ECC_Visibility, CollisionParams);
-
-  if (HitResult.bBlockingHit && AngleSharp(SocketTransform.GetLocation(), HitResult.ImpactPoint, SocketTransform.GetRotation().GetForwardVector())) {
-    DrawDebugLine(GetWorld(), SocketTransform.GetLocation(), HitResult.ImpactPoint, FColor::Red, false, 3.0f, 0, 3.0f);
-    DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10.0f, 24, FColor::Red, false, 5.0f);
-
-    MakeDamage(HitResult);
-  } else {
-    DrawDebugLine(GetWorld(), SocketTransform.GetLocation(), TraceEnd, FColor::Red, false, 3.0f, 0, 3.0f);
-  }
 }
+
+//bool ASTUBaseWeapon::GetTraceData(FVector& TraceStart, FVector& TraceEnd) const {
+//  FVector ViewLocation;
+//  FRotator ViewRotation;
+//  if (!GetPlayerViewPoint(ViewLocation, ViewRotation))
+//    return false;
+//
+//  TraceStart = ViewLocation;
+//  const FVector ShootDirection = ViewLocation.Vector();
+//  TraceEnd = TraceStart + ShootDirection * TraceMaxDistance;
+//  return true;
+//}
 
 bool ASTUBaseWeapon::AngleSharp(const FVector& Muzzle, const FVector& ImpactPoint, const FVector& SocketFwd) {
   FVector ShotDirection = ImpactPoint - Muzzle;
