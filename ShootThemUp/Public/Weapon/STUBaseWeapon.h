@@ -8,6 +8,20 @@
 
 class USkeletalMeshComponent;
 
+USTRUCT(BlueprintType)
+struct FAmmoData {
+  GENERATED_USTRUCT_BODY();
+
+  UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
+  int32 Bullets;
+
+  UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon", meta = (EditCondition = "!Infinite"))
+  int32 Clips;
+
+  UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
+  bool Infinite;
+};
+
 UCLASS()
 class SHOOTTHEMUP_API ASTUBaseWeapon : public AActor {
   GENERATED_BODY()
@@ -34,10 +48,22 @@ protected:
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Misc")
   float DamageAmount = 10.0f;
 
+  UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Misc")
+  FAmmoData DefaultAmmo{15, 10, false};
+
   virtual void BeginPlay() override;
 
   virtual void MakeShot();
   bool AngleSharp(const FVector& Muzzle, const FVector& ImpactPoint, const FVector& SocketFwd);
   /*bool GetTraceData(FVector& TraceStart, FVector TraceEnd);*/
   void MakeDamage(const FHitResult& HitResult);
+
+  void DecreaseAmmo();
+  bool IsAmmoEmpty() const;
+  bool IsClipEmpty() const;
+  void ChangeClip();
+  void LogAmmo();
+
+private:
+  FAmmoData CurrentAmmo;
 };

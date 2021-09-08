@@ -10,7 +10,7 @@ void ASTULauncherWeapon::StartFire() {
 }
 
 void ASTULauncherWeapon::MakeShot() {
-  if (!GetWorld())
+  if (!GetWorld() || IsAmmoEmpty())
     return;
 
   const auto Player = Cast<ACharacter>(GetOwner());
@@ -47,4 +47,6 @@ void ASTULauncherWeapon::MakeShot() {
     Projectile->SetOwner(GetOwner());
     Projectile->FinishSpawning(SpawnTransform);
   }
+
+  DecreaseAmmo();
 }

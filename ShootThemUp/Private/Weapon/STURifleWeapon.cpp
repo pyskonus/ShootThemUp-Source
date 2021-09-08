@@ -16,7 +16,7 @@ void ASTURifleWeapon::StopFire() {
 }
 
 void ASTURifleWeapon::MakeShot() {
-  if (!GetWorld())
+  if (!GetWorld() || IsAmmoEmpty())
     return;
 
   const auto Player = Cast<ACharacter>(GetOwner());
@@ -50,4 +50,6 @@ void ASTURifleWeapon::MakeShot() {
   } else {
     DrawDebugLine(GetWorld(), SocketTransform.GetLocation(), TraceEnd, FColor::Red, false, 3.0f, 0, 3.0f);
   }
+
+  DecreaseAmmo();
 }
