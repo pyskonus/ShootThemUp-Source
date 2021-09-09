@@ -16,8 +16,10 @@ void ASTURifleWeapon::StopFire() {
 }
 
 void ASTURifleWeapon::MakeShot() {
-  if (!GetWorld() || IsAmmoEmpty())
+  if (!GetWorld() || IsAmmoEmpty()) {
+    StopFire();
     return;
+  }
 
   const auto Player = Cast<ACharacter>(GetOwner());
   if (!Player)
