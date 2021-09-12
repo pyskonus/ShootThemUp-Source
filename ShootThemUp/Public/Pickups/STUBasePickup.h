@@ -22,6 +22,12 @@ protected:
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pickup")
   float RespawnTime = 5.0f;
 
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pickup")
+  float FluctuationSpeed = 40.0f;
+
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pickup")
+  float RotationSpeed = 40.0f;
+
   virtual void BeginPlay() override;
   virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 
