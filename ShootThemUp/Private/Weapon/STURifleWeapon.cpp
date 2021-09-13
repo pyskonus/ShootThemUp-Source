@@ -5,6 +5,16 @@
 #include "DrawDebugHelpers.h"
 #include "Engine/World.h"
 #include "GameFramework/Character.h"
+#include "Weapon/Components/STUWeaponFXComponent.h"
+
+ASTURifleWeapon::ASTURifleWeapon() {
+  WeaponFXComponent = CreateDefaultSubobject<USTUWeaponFXComponent>("WeaponFXComponent");
+}
+
+void ASTURifleWeapon::BeginPlay() {
+  Super::BeginPlay();
+  check(WeaponFXComponent);
+}
 
 void ASTURifleWeapon::StartFire() {
   GetWorldTimerManager().SetTimer(ShotTimerHandle, this, &ASTURifleWeapon::MakeShot, TimeBetweenShots, true);
@@ -45,8 +55,9 @@ void ASTURifleWeapon::MakeShot() {
   GetWorld()->LineTraceSingleByChannel(HitResult, TraceStart, TraceEnd, ECollisionChannel::ECC_Visibility, CollisionParams);
 
   if (HitResult.bBlockingHit && AngleSharp(SocketTransform.GetLocation(), HitResult.ImpactPoint, SocketTransform.GetRotation().GetForwardVector())) {
-    DrawDebugLine(GetWorld(), SocketTransform.GetLocation(), HitResult.ImpactPoint, FColor::Red, false, 3.0f, 0, 3.0f);
-    DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10.0f, 24, FColor::Red, false, 5.0f);
+    // DrawDebugLine(GetWorld(), SocketTransform.GetLocation(), HitResult.ImpactPoint, FColor::Red, false, 3.0f, 0, 3.0f);
+    // DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 10.0f, 24, FColor::Red, false, 5.0f);
+    WeaponFXComponent->PlayImpactFX(HitResult);
 
     MakeDamage(HitResult);
   } else {
