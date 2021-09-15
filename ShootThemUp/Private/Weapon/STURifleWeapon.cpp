@@ -6,6 +6,7 @@
 #include "Engine/World.h"
 #include "GameFramework/Character.h"
 #include "Weapon/Components/STUWeaponFXComponent.h"
+#include "NiagaraComponent.h"
 
 ASTURifleWeapon::ASTURifleWeapon() {
   WeaponFXComponent = CreateDefaultSubobject<USTUWeaponFXComponent>("WeaponFXComponent");
@@ -17,12 +18,14 @@ void ASTURifleWeapon::BeginPlay() {
 }
 
 void ASTURifleWeapon::StartFire() {
+  InitMuzzleFX();
   GetWorldTimerManager().SetTimer(ShotTimerHandle, this, &ASTURifleWeapon::MakeShot, TimeBetweenShots, true);
   MakeShot();
 }
 
 void ASTURifleWeapon::StopFire() {
   GetWorldTimerManager().ClearTimer(ShotTimerHandle);
+  SetMuzzleFXVisibility(false);
 }
 
 void ASTURifleWeapon::MakeShot() {
@@ -66,4 +69,18 @@ void ASTURifleWeapon::MakeShot() {
   }
 
   DecreaseAmmo();
+}
+
+void ASTURifleWeapon::InitMuzzleFX() {
+  if (!MuzzleFXComponent)
+    MuzzleFXComponent = SpawnMuzzleFX();
+
+  SetMuzzleFXVisibility(true);
+}
+
+void ASTURifleWeapon::SetMuzzleFXVisibility(bool Visible) {
+  if (MuzzleFXComponent) {
+    MuzzleFXComponent->SetPaused(!Visible);
+    MuzzleFXComponent->SetVisibility(Visible, true);
+  }
 }
