@@ -28,7 +28,7 @@ void USTUWeaponFXComponent::PlayImpactFX(const FHitResult& Hit) {
                                                                ImpactData.DecalData.Material, //
                                                                ImpactData.DecalData.Size,     //
                                                                Hit.ImpactPoint,               //
-                                                               Hit.ImpactNormal.Rotation());
+                                                               FRotator::ZeroRotator - Hit.ImpactNormal.Rotation());
 
   if (DecalComponent)
     DecalComponent->SetFadeOut(ImpactData.DecalData.LifeTime, ImpactData.DecalData.FadeOutTime);
