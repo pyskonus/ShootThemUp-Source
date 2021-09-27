@@ -17,7 +17,7 @@ void ASTULauncherWeapon::MakeShot() {
   if (!Player)
     return;
 
-  const auto Controller = Player->GetController<APlayerController>();
+  const auto Controller = Player->GetController<AController>();
   if (!Controller)
     return;
 
