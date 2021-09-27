@@ -11,7 +11,8 @@ ASTUAICharacter::ASTUAICharacter(const FObjectInitializer& ObjInit) : Super(ObjI
 
   if (GetCharacterMovement()) {
     bUseControllerRotationYaw = false;
-    GetCharacterMovement()->bOrientRotationToMovement = true;
+    /*GetCharacterMovement()->bOrientRotationToMovement = true;
+    GetCharacterMovement()->bUseControllerDesiredRotation = true;*/
     GetCharacterMovement()->RotationRate = FRotator(0.0f, 360.0f, 0.0f);
   }
 }
