@@ -6,6 +6,7 @@
 #include "STUBaseCharacter.h"
 #include "STUAICharacter.generated.h"
 
+
 class UBehaviorTree;
 
 UCLASS()
@@ -17,4 +18,7 @@ public:
 
   UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "AI")
   UBehaviorTree* BehaviorTreeAsset;
+
+protected:
+  virtual void OnDeath() override;
 };
