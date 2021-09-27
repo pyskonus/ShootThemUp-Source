@@ -67,7 +67,7 @@ void ASTUBaseWeapon::MakeDamage(const FHitResult& HitResult) {
   if (!Player)
     return;
 
-  const auto Controller = Player->GetController<APlayerController>();
+  const auto Controller = Player->GetController<AController>();
   if (!Controller)
     return;
 

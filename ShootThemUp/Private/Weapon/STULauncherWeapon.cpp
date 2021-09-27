@@ -23,7 +23,17 @@ void ASTULauncherWeapon::MakeShot() {
 
   FVector ViewLocation;
   FRotator ViewRotation;
-  Controller->GetPlayerViewPoint(ViewLocation, ViewRotation);
+
+  /// get view point
+  const auto STUCharacter = Cast<ACharacter>(GetOwner());
+  if (!STUCharacter)
+    return;
+  if (STUCharacter->IsPlayerControlled()) {
+    Controller->GetPlayerViewPoint(ViewLocation, ViewRotation);
+  } else {
+    ViewLocation = WeaponMesh->GetSocketLocation(MuzzleSocketName);
+    ViewRotation = WeaponMesh->GetSocketRotation(MuzzleSocketName);
+  }
 
   const FTransform SocketTransform = WeaponMesh->GetSocketTransform(MuzzleSocketName);
   const FVector TraceStart = ViewLocation;              //SocketTransform.GetLocation();

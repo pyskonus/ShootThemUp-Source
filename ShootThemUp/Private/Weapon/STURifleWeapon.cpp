@@ -37,14 +37,24 @@ void ASTURifleWeapon::MakeShot() {
   const auto Player = Cast<ACharacter>(GetOwner());
   if (!Player)
     return;
-
-  const auto Controller = Player->GetController<APlayerController>();
+  
+  const auto Controller = Player->GetController<AController>();
   if (!Controller)
     return;
-
+  
   FVector ViewLocation;
   FRotator ViewRotation;
-  Controller->GetPlayerViewPoint(ViewLocation, ViewRotation);
+
+  /// get view point
+  const auto STUCharacter = Cast<ACharacter>(GetOwner());
+  if (!STUCharacter)
+    return;
+  if (STUCharacter->IsPlayerControlled()) {
+    Controller->GetPlayerViewPoint(ViewLocation, ViewRotation);
+  } else {
+    ViewLocation = WeaponMesh->GetSocketLocation(MuzzleSocketName);
+    ViewRotation = WeaponMesh->GetSocketRotation(MuzzleSocketName);
+  }
 
   const FTransform SocketTransform = WeaponMesh->GetSocketTransform(MuzzleSocketName);
   const FVector TraceStart = ViewLocation; //SocketTransform.GetLocation();
