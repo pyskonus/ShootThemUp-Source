@@ -50,7 +50,6 @@ void ASTUBasePickup::PickupWasTaken() {
   if (GetRootComponent())
     GetRootComponent()->SetVisibility(false, true);
 
-  FTimerHandle RespawnTimerHandle;
   GetWorldTimerManager().SetTimer(RespawnTimerHandle, this, &ASTUBasePickup::Respawn, RespawnTime);
 }
 void ASTUBasePickup::Respawn() {
@@ -61,4 +60,8 @@ void ASTUBasePickup::Respawn() {
 
 bool ASTUBasePickup::GivePickupTo(APawn* PlayerPawn) {
   return false;
+}
+
+bool ASTUBasePickup::CouldBeTaken() const {
+  return !GetWorldTimerManager().IsTimerActive(RespawnTimerHandle);
 }

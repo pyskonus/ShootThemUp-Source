@@ -33,9 +33,12 @@ protected:
 
 public:
   virtual void Tick(float DeltaTime) override;
+  bool CouldBeTaken() const;
 
 private:
   virtual bool GivePickupTo(APawn* PlayerPawn);
   void PickupWasTaken();
   void Respawn();
+  
+  FTimerHandle RespawnTimerHandle;
 };
