@@ -117,7 +117,7 @@ void ASTUBaseWeapon::LogAmmo() {
   UE_LOG(LogBaseWeapon, Display, TEXT("%s"), *AmmoInfo);
 }
 
-bool ASTUBaseWeapon::IsAmmoFull() {
+bool ASTUBaseWeapon::IsAmmoFull() const {
   return CurrentAmmo.Clips == DefaultAmmo.Clips && //
          CurrentAmmo.Bullets == DefaultAmmo.Bullets;
 }
