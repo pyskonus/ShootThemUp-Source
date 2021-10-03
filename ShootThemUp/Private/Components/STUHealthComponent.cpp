@@ -9,7 +9,6 @@
 #include "STUGameModeBase.h"
 //#include "Camera/CameraShake.h"
 
-
 DEFINE_LOG_CATEGORY_STATIC(LogHC, All, All)
 
 // Sets default values for this component's properties
