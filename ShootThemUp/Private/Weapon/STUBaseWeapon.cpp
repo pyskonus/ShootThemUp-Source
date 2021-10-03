@@ -67,11 +67,11 @@ void ASTUBaseWeapon::MakeDamage(const FHitResult& HitResult) {
   if (!Player)
     return;
 
-  const auto Controller = Player->GetController<AController>();
+  /*const auto Controller = Player->GetController<AController>();
   if (!Controller)
-    return;
+    return;*/
 
-  DamagedActor->TakeDamage(DamageAmount, FDamageEvent(), Controller, this);
+  DamagedActor->TakeDamage(DamageAmount, FDamageEvent(), GetController(), this);
 }
 
 void ASTUBaseWeapon::DecreaseAmmo() {
@@ -149,4 +149,9 @@ UNiagaraComponent* ASTUBaseWeapon::SpawnMuzzleFX() {
                                                       FRotator::ZeroRotator,         //
                                                       EAttachLocation::SnapToTarget, //
                                                       true);
+}
+
+AController* ASTUBaseWeapon::GetController() const {
+  const auto Pawn = Cast<APawn>(GetOwner());
+  return Pawn ? Pawn->GetController() : nullptr;
 }

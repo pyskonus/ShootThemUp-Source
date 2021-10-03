@@ -73,4 +73,6 @@ protected:
 
 private:
   FAmmoData CurrentAmmo;
+
+  AController* GetController() const;
 };
