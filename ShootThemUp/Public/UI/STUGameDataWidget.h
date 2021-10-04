@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "STUGaneDataWidget.generated.h"
+#include "STUGameDataWidget.generated.h"
 
 /**
  * 

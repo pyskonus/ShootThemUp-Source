@@ -1,37 +1,33 @@
- // Created by pyskonus.
-
+// Created by pyskonus.
 
 #include "Components/STUWeaponComponent.h"
-#include "Weapon/STUBaseWeapon.h"
-#include "GameFramework/Character.h"
+#include "Animations/AnimUtils.h"
 #include "Animations/STUEquipFinishedAnimNotify.h"
 #include "Animations/STUReloadFinishedAnimNotify.h"
-#include "Animations/AnimUtils.h"
+#include "GameFramework/Character.h"
+#include "Weapon/STUBaseWeapon.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogWeaponComponent, All, All);
 
 constexpr int32 WeaponNum = 2;
 
-USTUWeaponComponent::USTUWeaponComponent()
-{
-	PrimaryComponentTick.bCanEverTick = false;
+USTUWeaponComponent::USTUWeaponComponent() {
+  PrimaryComponentTick.bCanEverTick = false;
 }
 
+void USTUWeaponComponent::BeginPlay() {
+  Super::BeginPlay();
 
-void USTUWeaponComponent::BeginPlay()
-{
-	Super::BeginPlay();
+  checkf(WeaponData.Num() == WeaponNum, TEXT("Character can only hold %i weapons"), WeaponNum)
 
-    checkf(WeaponData.Num() == WeaponNum, TEXT("Character can only hold %i weapons"), WeaponNum)
-  
-    InitAnimations();
+      InitAnimations();
 
-    SpawnWeapons();
+  SpawnWeapons();
 
-    EquipWeapon(CurrentWeaponIndex);
+  EquipWeapon(CurrentWeaponIndex);
 }
 
-void USTUWeaponComponent::EndPlay(const EEndPlayReason::Type EndPlayReason){
+void USTUWeaponComponent::EndPlay(const EEndPlayReason::Type EndPlayReason) {
   CurrentWeapon = nullptr;
   for (auto Weapon : Weapons) {
     Weapon->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
@@ -122,7 +118,6 @@ void USTUWeaponComponent::PlayAnimMontage(UAnimMontage* Animation) {
 }
 
 void USTUWeaponComponent::InitAnimations() {
-  
 
   auto EquipFinishedNotify = AnimUtils::FindNotifyByClass<USTUEquipFinishedAnimNotify>(EquipAnimMontage);
   if (EquipFinishedNotify) {
@@ -138,9 +133,8 @@ void USTUWeaponComponent::InitAnimations() {
       UE_LOG(LogWeaponComponent, Error, TEXT("No reload anim notify is set"));
       checkNoEntry();
     }
-    
+
     ReloadFinishedNotify->OnNotified.AddUObject(this, &USTUWeaponComponent::OnReloadFinished);
-    
   }
 }
 
@@ -217,13 +211,8 @@ bool USTUWeaponComponent::GetCurrentWeaponAmmoData(FAmmoData& AmmoData) const {
   return false;
 }
 
-bool USTUWeaponComponent::TryToAddAmmo(TSubclassOf<ASTUBaseWeapon> WeaponType, int32 ClipsAmount) {
-  for (const auto Weapon : Weapons) {
-    if (Weapon && Weapon->IsA(WeaponType)) {
-      return Weapon->TryToAddAmmo(ClipsAmount);
-    }
-  }
-  return false;
+bool USTUWeaponComponent::TryToAddAmmo(int32 ClipsAmount) {
+  return CurrentWeapon->TryToAddAmmo(ClipsAmount);
 }
 
 bool USTUWeaponComponent::NeedAmmo(TSubclassOf<ASTUBaseWeapon> WeaponType) {
