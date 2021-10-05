@@ -25,6 +25,8 @@ public:
   int32 GetCurrentRoundNum() const { return CurrentRound; }
   int32 GetRoundSecondsRemaining() const { return RoundCountDown; }
 
+  void RespawnRequest(AController* Controller);
+
 protected:
   UPROPERTY(EditDefaultsOnly, Category = "Game")
   TSubclassOf<AAIController> AIControllerClass;
@@ -51,4 +53,6 @@ private:
   FLinearColor DetermineColorByTeamID(int32 TeamID) const;
   void SetPlayerColor(AController* Controller);
   void LogInfo();
+
+  void StartRespawn(AController* Controller);
 };
