@@ -12,7 +12,7 @@ void USTURespawnComponent::Respawn(int32 RespawnTime) {
     return;
 
   RespawnCountdown = RespawnTime;
-  /*GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle, this, &USTURespawnComponent::RespawnTimerUpdate, 1.0f, true);*/
+  GetWorld()->GetTimerManager().SetTimer(RespawnTimerHandle, this, &USTURespawnComponent::RespawnTimerUpdate, 1.0f, true);
 }
 
 void USTURespawnComponent::RespawnTimerUpdate() {
@@ -27,4 +27,8 @@ void USTURespawnComponent::RespawnTimerUpdate() {
 
     GameMode->RespawnRequest(Cast<AController>(GetOwner()));
   }
+}
+
+bool USTURespawnComponent::IsRespawnInProgress() const {
+  return GetWorld() && GetWorld()->GetTimerManager().IsTimerActive(RespawnTimerHandle);
 }
