@@ -10,7 +10,7 @@
 
 DEFINE_LOG_CATEGORY_STATIC(LogSTUGameModeBase, All, All);
 
-constexpr static int32 MinRoundTimeForRespawn = 10;
+constexpr static int32 MinRoundTimeForRespawn = 5;
 
 ASTUGameModeBase::ASTUGameModeBase() {
   DefaultPawnClass = ASTUBaseCharacter::StaticClass();
@@ -51,6 +51,8 @@ UClass* ASTUGameModeBase::GetDefaultPawnClassForController_Implementation(AContr
 void ASTUGameModeBase::StartRound() {
   RoundCountDown = GameData.RoundTime;
   GetWorldTimerManager().SetTimer(GameRoundTimerHandle, this, &ASTUGameModeBase::GameTimerUpdate, 1.0f, true);
+
+  ResetPlayers();
 }
 
 void ASTUGameModeBase::GameTimerUpdate() {
