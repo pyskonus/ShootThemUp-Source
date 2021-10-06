@@ -8,6 +8,7 @@
 #include "STUUtils.h"
 #include "Components/STURespawnComponent.h"
 #include "EngineUtils.h"
+#include "UI/STUGameHUD.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogSTUGameModeBase, All, All);
 
@@ -16,6 +17,7 @@ constexpr static int32 MinRoundTimeForRespawn = 5;
 ASTUGameModeBase::ASTUGameModeBase() {
   DefaultPawnClass = ASTUBaseCharacter::StaticClass();
   PlayerControllerClass = ASTUBasePlayerController::StaticClass();
+  HUDClass = ASTUGameHUD::StaticClass();
   PlayerStateClass = ASTUPlayerState::StaticClass();
 }
 
@@ -27,6 +29,8 @@ void ASTUGameModeBase::StartPlay() {
 
   CurrentRound = 1;
   StartRound();
+
+  SetMatchState(ESTUMatchState::InProgress);
 }
 
 void ASTUGameModeBase::SpawnBots() {
@@ -192,4 +196,14 @@ void ASTUGameModeBase::GameOver() {
       Pawn->DisableInput(nullptr);
     }
   }
+
+  SetMatchState(ESTUMatchState::GameOver);
+}
+
+void ASTUGameModeBase::SetMatchState(ESTUMatchState State) {
+  if (MatchState == State)
+    return;
+
+  MatchState = State;
+  OnMatchStateChanged.Broadcast(MatchState);
 }
