@@ -41,12 +41,19 @@ bool USTUPlayerHUDWidget::IsPlayerSpectating() const {
 }
 
 bool USTUPlayerHUDWidget::Initialize() {
-  const auto HealthComponent = STUUtils::GetSTUPlayerComponent<USTUHealthComponent>(GetOwningPlayerPawn());
-  if (HealthComponent) {
-    HealthComponent->OnHealthChange.AddUObject(this, &USTUPlayerHUDWidget::OnHealthChange);
+  if (GetOwningPlayer()) {
+    GetOwningPlayer()->GetOnNewPawnNotifier().AddUObject(this, &USTUPlayerHUDWidget::OnNewPawn);
+    OnNewPawn(GetOwningPlayerPawn());
   }
 
   return Super::Initialize();
+}
+
+void USTUPlayerHUDWidget::OnNewPawn(APawn* NewPawn) {
+  const auto HealthComponent = STUUtils::GetSTUPlayerComponent<USTUHealthComponent>(NewPawn);
+  if (HealthComponent) {
+    HealthComponent->OnHealthChange.AddUObject(this, &USTUPlayerHUDWidget::OnHealthChange);
+  }
 }
 
 void USTUPlayerHUDWidget::OnHealthChange(float Health, float HealthDelta) {
