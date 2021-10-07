@@ -17,4 +17,9 @@ public:
 protected:
   UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
   USTURespawnComponent* RespawnComponent;
+
+  virtual void SetupInputComponent() override;
+
+private:
+  void OnPauseGame();
 };
