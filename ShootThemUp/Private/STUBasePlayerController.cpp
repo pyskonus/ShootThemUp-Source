@@ -3,10 +3,30 @@
 
 #include "STUBasePlayerController.h"
 #include "Components/STURespawnComponent.h"
-#include "GameFramework/GameModeBase.h"
+#include "STUGameModeBase.h"
 
 ASTUBasePlayerController::ASTUBasePlayerController() {
   RespawnComponent = CreateDefaultSubobject<USTURespawnComponent>("RespawnComponent");
+}
+
+void ASTUBasePlayerController::BeginPlay() {
+  Super::BeginPlay();
+  
+  if (GetWorld()) {
+    const auto GameMode = Cast<ASTUGameModeBase>(GetWorld()->GetAuthGameMode());
+    if (GameMode)
+      GameMode->OnMatchStateChanged.AddUObject(this, &ASTUBasePlayerController::OnMatchStateChanged);
+  }
+}
+
+void ASTUBasePlayerController::OnMatchStateChanged(ESTUMatchState State) {
+  if (State == ESTUMatchState::InProgress) {
+    SetInputMode(FInputModeGameOnly());
+    bShowMouseCursor = false;
+  } else {
+    SetInputMode(FInputModeUIOnly());
+    bShowMouseCursor = true;
+  }
 }
 
 void ASTUBasePlayerController::SetupInputComponent() {
@@ -23,3 +43,4 @@ void ASTUBasePlayerController::OnPauseGame() {
 
   GetWorld()->GetAuthGameMode()->SetPause(this);
 }
+
