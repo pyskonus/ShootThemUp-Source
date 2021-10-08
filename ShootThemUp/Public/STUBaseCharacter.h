@@ -19,6 +19,7 @@ public:
 protected:
   virtual void BeginPlay() override;
   virtual void OnDeath();
+  virtual void OnHealthChange(float Health, float HealthDelta);
 
   UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
   USTUHealthComponent* HealthComponent;
@@ -55,8 +56,6 @@ public:
   void SetPlayerColor(const FLinearColor& Color);
 
 private:
-  void OnHealthChange(float Health, float HealthDelta);
-
   UFUNCTION()
   void OnGroundLanded(const FHitResult& Hit);
 };

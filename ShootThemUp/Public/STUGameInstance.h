@@ -18,7 +18,7 @@ public:
   FName GetMenuLevelName() const { return MenuLevelName; }
 
 protected:
-  UPROPERTY(EditDefaultsOnly, Category = "Game")
+  UPROPERTY(EditDefaultsOnly, Category = "Game", meta = (ToolTip = "Level names must be unique!"));
   TArray<FLevelData> LevelsData;
 
   UPROPERTY(EditDefaultsOnly, Category = "Game")
