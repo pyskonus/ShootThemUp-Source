@@ -7,6 +7,7 @@
 #include "STUCoreTypes.h"
 #include "STUBaseWeapon.generated.h"
 
+class AController;
 class USkeletalMeshComponent;
 class UNiagaraSystem;
 class UNiagaraComponent;
@@ -32,6 +33,10 @@ public:
   bool TryToAddAmmo(int32 ClipsAmount);
   bool IsAmmoEmpty() const;
   bool IsAmmoFull() const;
+  
+  virtual void Zoom(bool Enable) {}
+
+  AController* GetController() const;
 
 protected:
   UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
@@ -73,6 +78,4 @@ protected:
 
 private:
   FAmmoData CurrentAmmo;
-
-  AController* GetController() const;
 };

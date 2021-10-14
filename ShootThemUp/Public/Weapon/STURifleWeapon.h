@@ -17,6 +17,7 @@ public:
   ASTURifleWeapon();
   virtual void StartFire() override;
   virtual void StopFire() override;
+  virtual void Zoom(bool Enable) override;
 
 protected:
   virtual void BeginPlay() override;

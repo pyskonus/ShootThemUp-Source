@@ -7,8 +7,6 @@
 #include "STU_CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 
-DEFINE_LOG_CATEGORY_STATIC(Shit, All, All);
-
 ASTUBaseCharacter::ASTUBaseCharacter(const FObjectInitializer& ObjInit) : Super(ObjInit.SetDefaultSubobjectClass<USTU_CharacterMovementComponent>(ACharacter::CharacterMovementComponentName)) {
   PrimaryActorTick.bCanEverTick = true;
 
@@ -68,13 +66,11 @@ void ASTUBaseCharacter::OnHealthChange(float Health, float HealthDelta) {
 
 void ASTUBaseCharacter::OnGroundLanded(const FHitResult& Hit) {
   const auto FallVelocityZ = -GetCharacterMovement()->Velocity.Z;
-  UE_LOG(Shit, Display, TEXT("Landed velocity: %f"), FallVelocityZ);
 
   if (FallVelocityZ < LandedVelocity.X)
     return;
 
   const auto FinalDamage = FMath::GetMappedRangeValueClamped(LandedVelocity, LandedDamage, FallVelocityZ);
-  UE_LOG(Shit, Display, TEXT("Landed damage: %f"), FinalDamage);
   TakeDamage(FinalDamage, FDamageEvent{}, nullptr, nullptr);
 }
 

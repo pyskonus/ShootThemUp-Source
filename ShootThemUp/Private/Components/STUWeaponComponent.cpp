@@ -223,3 +223,8 @@ bool USTUWeaponComponent::NeedAmmo(TSubclassOf<ASTUBaseWeapon> WeaponType) {
   }
   return false;
 }
+
+void USTUWeaponComponent::Zoom(bool Enabled) {
+  if (CurrentWeapon)
+    CurrentWeapon->Zoom(Enabled);
+}
